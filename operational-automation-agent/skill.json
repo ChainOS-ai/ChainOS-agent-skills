@@ -1,0 +1,79 @@
+{
+  "name": "operational-automation-agent",
+  "version": "1.0.0",
+  "description": "7×24 background automation for hijacking monitoring, price tracking, email classification, and daily sales reporting.",
+  "author": "ChinaOS",
+  "license": "MIT",
+  "runtime": "any",
+  "entry": "SKILL.md",
+  "triggers": {
+    "keywords": ["monitor", "auto alert", "跟卖", "price alert", "email classification", "daily report", "automation"],
+    "intent": "start_automation_task"
+  },
+  "dependencies": {
+    "required": [
+      "cron",
+      "http-client"
+    ],
+    "optional": [
+      "playwright-mcp",
+      "amazon-sp-api",
+      "gmail-api",
+      "feishu-api",
+      "wechat-work-api"
+    ]
+  },
+  "environment_variables": {
+    "AMAZON_SP_API_CLIENT_ID": {
+      "required": false,
+      "description": "Selling Partner API client ID (for daily sales report)"
+    },
+    "AMAZON_SP_API_CLIENT_SECRET": {
+      "required": false,
+      "description": "Selling Partner API client secret"
+    },
+    "FEISHU_BOT_WEBHOOK": {
+      "required": false,
+      "description": "Webhook URL for Feishu bot (alerts and daily report)"
+    },
+    "WECHAT_WORK_WEBHOOK": {
+      "required": false,
+      "description": "Webhook URL for WeChat Work (enterprise)"
+    },
+    "SMTP_HOST": {
+      "required": false,
+      "description": "SMTP server for email alerts"
+    },
+    "GMAIL_CREDENTIALS_PATH": {
+      "required": false,
+      "description": "Path to Gmail OAuth credentials JSON (for email classification)"
+    }
+  },
+  "output": {
+    "formats": ["json", "card"],
+    "files": ["alert_log.json", "daily_report.csv"],
+    "notification": true
+  },
+  "parameters": {
+    "default_check_intervals": {
+      "hijacking_minutes": 120,
+      "price_minutes": 360,
+      "email_minutes": 30,
+      "daily_report_hour": 9
+    },
+    "alert_thresholds": {
+      "price_drop_percent": 5,
+      "consecutive_hijack_checks": 2
+    },
+    "retry_config": {
+      "max_retries": 3,
+      "backoff_seconds": 60
+    },
+    "heartbeat_interval_hours": 12
+  },
+  "examples": [
+    "Monitor hijackers for ASIN B08P227CJP every 2 hours, push to Feishu",
+    "Track competitor price for ASIN B07XYZ123, alert if drop >5%",
+    "Auto-classify my Gmail and Amazon messages, send summary daily at 9am"
+  ]
+}
