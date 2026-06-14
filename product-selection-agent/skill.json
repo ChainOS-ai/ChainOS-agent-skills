@@ -1,0 +1,58 @@
+{
+  "name": "product-selection-agent",
+  "version": "1.0.0",
+  "description": "Fully automated product selection with demand/competition/profit scoring and radar chart output.",
+  "author": "ChinaOS",
+  "license": "MIT",
+  "runtime": "any",
+  "entry": "SKILL.md",
+  "triggers": {
+    "keywords": ["product selection", "选品", "should I sell", "market analysis", "product research", "选品算命"],
+    "intent": "analyze_product_feasibility"
+  },
+  "dependencies": {
+    "required": [
+      "file-io",
+      "web-search"
+    ],
+    "optional": [
+      "playwright-mcp",
+      "tavily-api",
+      "brave-search"
+    ]
+  },
+  "environment_variables": {
+    "TAVILY_API_KEY": {
+      "required": false,
+      "description": "API key for Tavily search (used for real-time trend detection)"
+    },
+    "BRAVE_API_KEY": {
+      "required": false,
+      "description": "Alternative search API key for Brave Search"
+    }
+  },
+  "output": {
+    "formats": ["markdown", "html", "csv"],
+    "files": ["radar_chart.png", "product_report.html", "competitor_data.csv"],
+    "notification": false
+  },
+  "parameters": {
+    "default_competitor_count": 10,
+    "max_keywords": 2000,
+    "scoring_weights": {
+      "demand": 0.4,
+      "competition": 0.35,
+      "profit": 0.25
+    },
+    "score_thresholds": {
+      "strong_go": 80,
+      "consider": 60,
+      "avoid": 60
+    }
+  },
+  "examples": [
+    "Analyze product: portable blender",
+    "Run product selection for ASIN B08P227CJP",
+    "Market research for camping folding table"
+  ]
+}
