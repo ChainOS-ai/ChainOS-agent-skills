@@ -1,0 +1,57 @@
+{
+  "name": "supplier-discovery-agent",
+  "version": "1.0.0",
+  "description": "1688 supplier discovery with automated Tianyancha background checks and risk scoring.",
+  "author": "ChinaOS",
+  "license": "MIT",
+  "runtime": "any",
+  "entry": "SKILL.md",
+  "triggers": {
+    "keywords": ["supplier", "1688", "供应商", "find supplier", "source product", "背调", "天眼查"],
+    "intent": "discover_suppliers"
+  },
+  "dependencies": {
+    "required": [
+      "playwright-mcp",
+      "http-client"
+    ],
+    "optional": [
+      "tianyancha-api"
+    ]
+  },
+  "environment_variables": {
+    "TIANYANCHA_API_KEY": {
+      "required": true,
+      "description": "API key for Tianyancha enterprise data (apply at open.tianyancha.com)"
+    },
+    "TIANYANCHA_API_BASE": {
+      "required": false,
+      "default": "https://api.tianyancha.com",
+      "description": "Base URL for Tianyancha API (custom endpoint if needed)"
+    }
+  },
+  "output": {
+    "formats": ["xlsx", "csv", "json"],
+    "files": ["supplier_comparison.xlsx", "risk_details.xlsx"],
+    "notification": true
+  },
+  "parameters": {
+    "default_supplier_count": 10,
+    "risk_score_factors": {
+      "registered_capital_min": 1000000,
+      "years_founded_min": 3,
+      "litigation_weight": -20,
+      "abnormal_status_weight": -50
+    },
+    "risk_levels": {
+      "green": "low",
+      "yellow": "medium",
+      "red": "high"
+    }
+  },
+  "examples": [
+    "Find 5 power bank suppliers on 1688, rating >4.5, OEM supported",
+    "Source wireless charger with MOQ <500",
+    "Background check on Shenzhen Xunwei Technology Co., Ltd."
+  ]
+}
