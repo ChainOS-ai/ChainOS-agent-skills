@@ -1,0 +1,48 @@
+{
+  "name": "document-finance-agent",
+  "version": "1.0.0",
+  "description": "Multi-format quote consolidation, profit formula generation, and platform onboarding decision support.",
+  "author": "ChinaOS",
+  "license": "MIT",
+  "runtime": "any",
+  "entry": "SKILL.md",
+  "triggers": {
+    "keywords": ["quote", "报价", "consolidate", "profit calculation", "毛利率", "onboarding", "platform comparison"],
+    "intent": "process_documents_and_finance"
+  },
+  "dependencies": {
+    "required": [
+      "file-io",
+      "multimodal-llm"
+    ],
+    "optional": [
+      "exchange-rate-api"
+    ]
+  },
+  "environment_variables": {
+    "EXCHANGE_RATE_API_KEY": {
+      "required": false,
+      "description": "API key for real-time currency conversion (free tier available from exchangerate-api.com)"
+    }
+  },
+  "output": {
+    "formats": ["xlsx", "csv", "html", "markdown"],
+    "files": ["consolidated_quotes.xlsx", "profit_analysis.xlsx", "platform_comparison.html"],
+    "notification": false
+  },
+  "parameters": {
+    "max_files_per_batch": 10,
+    "confidence_threshold": 85,
+    "supported_currencies": ["USD", "CNY", "EUR", "GBP", "JPY"],
+    "profit_formulas": {
+      "gross_margin": "(selling_price - cost_price - shipping) / selling_price",
+      "net_margin": "(selling_price - total_cost) / selling_price",
+      "roi": "net_margin * estimated_turnover"
+    }
+  },
+  "examples": [
+    "Consolidate these 5 quote files into one Excel",
+    "Add profit formulas to this cost sheet",
+    "Compare Amazon, Temu, and TikTok Shop for yoga mats"
+  ]
+}
