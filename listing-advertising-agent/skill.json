@@ -1,0 +1,62 @@
+{
+  "name": "listing-advertising-agent",
+  "version": "1.0.0",
+  "description": "COSMO‑aware Amazon listing generation and advertising diagnostics (ACoS, CTR, CVR).",
+  "author": "ChinaOS",
+  "license": "MIT",
+  "runtime": "any",
+  "entry": "SKILL.md",
+  "triggers": {
+    "keywords": ["listing", "optimize listing", "ad diagnosis", "ACoS", "COSMO", "amazon advertising", "五点描述"],
+    "intent": "optimize_listing_and_ads"
+  },
+  "dependencies": {
+    "required": [
+      "file-io",
+      "llm"
+    ],
+    "optional": [
+      "playwright-mcp",
+      "amazon-advertising-api"
+    ]
+  },
+  "environment_variables": {
+    "AMAZON_ADS_CLIENT_ID": {
+      "required": false,
+      "description": "Amazon Advertising API client ID (for ad diagnosis)"
+    },
+    "AMAZON_ADS_CLIENT_SECRET": {
+      "required": false,
+      "description": "Amazon Advertising API client secret"
+    },
+    "AMAZON_ADS_REFRESH_TOKEN": {
+      "required": false,
+      "description": "OAuth refresh token for ad API access"
+    }
+  },
+  "output": {
+    "formats": ["html", "markdown", "csv", "json"],
+    "files": ["optimized_listing.html", "cosmo_radar.png", "ad_diagnosis.csv"],
+    "notification": false
+  },
+  "parameters": {
+    "cosmo_relationships": [
+      "USED_FOR_FUNC", "CAPABLE_OF", "USED_TO", "USED_FOR_EVE",
+      "IS_A", "USED_AS",
+      "USED_FOR_AUD", "USED_BY", "xIS_A",
+      "USED_ON", "USED_IN_LOC",
+      "USED_WITH", "xWANT", "xINTERESTED_IN"
+    ],
+    "ad_metrics": {
+      "acos_threshold": "gross_margin",
+      "ctr_warning": 0.005,
+      "cvr_warning": 0.05
+    },
+    "listing_quality_checks": ["keyword_coverage", "semantic_relation_count", "blacklist_scan"]
+  },
+  "examples": [
+    "Optimize my listing for ASIN B08P227CJP for COSMO",
+    "Generate a new A+ content based on competitor reviews",
+    "Analyze last week's ad performance, flag high ACoS keywords"
+  ]
+}
