@@ -1,0 +1,117 @@
+{
+  "name": "orchestrator-agent",
+  "version": "1.0.0",
+  "description": "大总管 Agent – 统一调度与协调六个垂直领域 Agent（选品、供应商背调、文档财务、Listing广告、SEO+GEO、运营自动化）。用户自然语言输入，自动拆解任务、分发执行、收集结果并生成综合报告。",
+  "author": "ChinaOS",
+  "license": "MIT",
+  "runtime": "any",
+  "entry": "SKILL.md",
+  "triggers": {
+    "keywords": [
+      "orchestrate",
+      "orchestrator",
+      "大总管",
+      "协调",
+      "workflow",
+      "自动化流程",
+      "同时",
+      "然后",
+      "接着",
+      "之后",
+      "complete workflow",
+      "full process",
+      "end-to-end"
+    ],
+    "intent": "coordinate_multi_agent_workflow"
+  },
+  "dependencies": {
+    "required": [
+      "file-io",
+      "http-client",
+      "cron"
+    ],
+    "optional": [
+      "product-selection-agent",
+      "supplier-discovery-agent",
+      "document-finance-agent",
+      "listing-advertising-agent",
+      "seo-geo-agent",
+      "operational-automation-agent"
+    ],
+    "notes": "All six sub-agents must be present in the same skills directory for full functionality. The orchestrator will automatically discover them via their skill.json files."
+  },
+  "environment_variables": {
+    "ORCHESTRATOR_PARALLEL": {
+      "required": false,
+      "default": "false",
+      "description": "Enable parallel execution of independent sub-tasks. Set to 'true' to allow concurrency (max 5 parallel agents)."
+    },
+    "ORCHESTRATOR_CRON": {
+      "required": false,
+      "default": "",
+      "description": "Cron schedule for automatically executing a predefined workflow. Format: '分 时 日 月 周' (e.g., '0 9 * * *' for daily 9 AM). Requires a saved workflow template."
+    },
+    "ORCHESTRATOR_WEBHOOK": {
+      "required": false,
+      "default": "",
+      "description": "URL to send completion callbacks via HTTP POST (JSON payload with task_id, status, report_url)."
+    },
+    "ORCHESTRATOR_MAX_RETRIES": {
+      "required": false,
+      "default": "2",
+      "description": "Maximum number of retries for a failed sub-agent call."
+    },
+    "ORCHESTRATOR_NOTIFY_CHANNEL": {
+      "required": false,
+      "default": "feishu",
+      "description": "Default notification channel: 'feishu', 'wechat', 'email', or 'none'."
+    }
+  },
+  "output": {
+    "formats": ["html", "markdown", "pdf", "zip"],
+    "files": [
+      "task_<id>_report.html",
+      "task_<id>_report.md",
+      "task_<id>_bundle.zip"
+    ],
+    "notification": true
+  },
+  "parameters": {
+    "max_subtasks": 20,
+    "max_parallel_agents": 5,
+    "default_retry_delay_seconds": 5,
+    "subtask_timeout_multiplier": 2.0,
+    "context_store_path": ".orchestrator_context/",
+    "log_level": "info",
+    "human_approval_required_for": [
+      "batch_publish",
+      "auto_ad_bid_change",
+      "delete_operation"
+    ]
+  },
+  "sub_agent_discovery": {
+    "method": "scan_skills_directory",
+    "expected_agents": [
+      "product-selection-agent",
+      "supplier-discovery-agent",
+      "document-finance-agent",
+      "listing-advertising-agent",
+      "seo-geo-agent",
+      "operational-automation-agent"
+    ],
+    "required_metadata": ["agent_id", "input_schema", "output_schema"]
+  },
+  "examples": [
+    "Analyze the market for portable blender, then find 3 suppliers, and finally generate an Amazon listing.",
+    "Run my weekly operational check: hijacking monitoring, price tracking, and daily sales report.",
+    "Optimise my existing article for AI search engines and create 50 location pages.",
+    "If product selection score is above 80, continue with supplier discovery; otherwise stop and tell me to abandon."
+  ],
+  "advanced": {
+    "task_persistence": true,
+    "resume_on_restart": true,
+    "state_backend": "sqlite",
+    "heartbeat_interval_seconds": 30,
+    "metrics_enabled": true
+  }
+}
